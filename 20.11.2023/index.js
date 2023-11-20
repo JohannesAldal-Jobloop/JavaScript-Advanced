@@ -124,35 +124,41 @@ buttonShowPosts.addEventListener("click", () =>
     getData(1)
 })
 
-async function getData(APIindex) 
+async function getData() 
 {
     try{
-    const response = await fetch(urlAPIs[APIindex])
+    // const response = await fetch(urlAPIs[APIindex])
+    const responseUsers = await fetch(urlAPIs[0])
+    const responsePosts = await fetch(urlAPIs[1])
 
     // Check if the page of the url exists
-    if(response.status === 404)
+    if(responseUsers.status === 404 || responsePosts.status === 404)
     {
         display404error()
         return
     }
 
     // fetch the data
-    const data = await response.json()
+    const dataUsers = await responseUsers.json()
+    const dataPosts = await responsePosts.json()
 
-    if(APIindex === 0) displayUsers(data)
-    else if(APIindex === 1) displayPosts(data)
+    // if(APIindex === 0) displayUsers(data)
+    // else if(APIindex === 1) displayPosts(data)
+
+    displayData(dataUsers, dataPosts)
     
-    return data
+    return dataUsers, dataPosts
     
     }
     catch (error)
     {
         display404error()
         console.log("something went wrong")
+        console.log(error)
     }
 }
 
-//getData(0)
+getData()
 
 function display404error()
 {
@@ -162,14 +168,17 @@ function display404error()
     containerEL.append(element)
 }
 
-function displayData(dataArray, dataName)
+function displayData(dataArrayUsers, dataArrayPosts)
 {
     containerEL.innerHTML = ""
-    dataArray.forEach(data => 
+    dataArrayUsers.forEach(dataUser => 
     {
         const element = document.createElement("p")
 
-        element.textContent = data.dataName
+        element.textContent = dataUser.dataName + dataArrayPosts.forEach(dataPosts => 
+            {
+                dataPosts.body
+            })
         
         containerEL.append(element)
     });
