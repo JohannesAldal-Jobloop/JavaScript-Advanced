@@ -111,18 +111,17 @@ const urlAPIs = [
 
 const buttonShowUsers = document.getElementById("showUsersEL")
 const buttonShowPosts = document.getElementById("showPostsEL")
-const containerEL = document.getElementById("container")
+const containerEL = document.getElementById("containerEL")
 
 buttonShowUsers.addEventListener("click", () => 
 {
-    // getData[0]
-    // containerEL.textContent =
+    getData(0)
 })
 
 
 buttonShowPosts.addEventListener("click", () => 
 {
-
+    getData(1)
 })
 
 async function getData(APIindex) 
@@ -130,42 +129,74 @@ async function getData(APIindex)
     try{
     const response = await fetch(urlAPIs[APIindex])
 
-    //console.log(response)
+    // Check if the page of the url exists
     if(response.status === 404)
     {
+        display404error()
         return
     }
 
     // fetch the data
     const data = await response.json()
 
-    displayUsers(data)
+    if(APIindex === 0) displayUsers(data)
+    else if(APIindex === 1) displayPosts(data)
+    
+    return data
     
     }
-    catch
+    catch (error)
     {
         display404error()
         console.log("something went wrong")
     }
 }
 
-getData(0)
+//getData(0)
 
 function display404error()
 {
+    containerEL.innerHTML = ""
     const element = document.createElement("h2")
     element.textContent = "Page not found"
-    document.body.append(element)
+    containerEL.append(element)
 }
 
-function displayUsers(data)
+function displayData(dataArray, dataName)
 {
-    data.forEach(userData => 
+    containerEL.innerHTML = ""
+    dataArray.forEach(data => 
     {
         const element = document.createElement("p")
 
-        element.textContent = userData.name
+        element.textContent = data.dataName
         
-        document.body.append(element)
+        containerEL.append(element)
+    });
+}
+
+function displayUsers(dataArray)
+{
+    containerEL.innerHTML = ""
+    dataArray.forEach(data => 
+    {
+        const element = document.createElement("p")
+
+        element.textContent = data.name
+        
+        containerEL.append(element)
+    });
+}
+
+function displayPosts(dataArray)
+{
+    containerEL.innerHTML = ""
+    dataArray.forEach(data => 
+    {
+        const element = document.createElement("p")
+
+        element.textContent = data.body
+        
+        containerEL.append(element)
     });
 }
